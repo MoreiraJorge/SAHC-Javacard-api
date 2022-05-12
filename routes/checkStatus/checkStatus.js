@@ -1,13 +1,15 @@
+import Router from 'koa-router'
+import { applicationException } from '../../helpers.js'
+const router = new Router()
 
-import Router from "koa-router";
-const router = new Router();
+router.post('/healthPost', (ctx) => {
+	console.log(ctx.request.body)
+	ctx.body = JSON.stringify(ctx.request.body)
+	//throw new applicationException("Custom error", 404)
+})
 
-router.get("/health", async (ctx) => {
-  try {
-    ctx.body = "I am Alive!";
-  } catch (e) {
-    console.error(e);
-  }
-});
+router.get('/health', () => {
+	throw applicationException('Custom error', 500)
+})
 
-export default router.routes();
+export default router.routes()

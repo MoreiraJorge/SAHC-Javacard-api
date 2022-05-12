@@ -20,11 +20,18 @@
   "homepage": "https://github.com/MoreiraJorge/SAHC-Javacard-api#readme",
   "dependencies": {
     "dotenv": "^16.0.1",
+    "knex": "^2.0.0",
     "koa": "^2.13.4",
     "koa-body": "^5.0.0",
     "koa-convert": "^2.0.0",
     "koa-cors": "^0.0.16",
     "koa-router": "^10.1.1",
     "smartcard": "^1.0.46"
+  },
+  "devDependencies": {
+    "eslint": "^8.15.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.6.2"
   }
 }
