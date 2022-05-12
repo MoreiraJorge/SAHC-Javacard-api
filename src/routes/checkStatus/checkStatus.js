@@ -8,8 +8,10 @@ router.post('/healthPost', (ctx) => {
 	//throw new applicationException("Custom error", 404)
 })
 
-router.get('/health', () => {
-	throw applicationException('Custom error', 500)
+router.get('/health', (ctx) => {
+	ctx.body = "Im Healthy"
+	ctx.status = 200
+	//throw applicationException('Custom error1', 500)
 })
 
 export default router.routes()
