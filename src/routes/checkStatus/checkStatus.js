@@ -1,5 +1,5 @@
 import Router from 'koa-router'
-import { applicationException } from '../../helpers.js'
+import { applicationException } from '../../../helpers.js'
 const router = new Router()
 
 router.post('/healthPost', (ctx) => {
