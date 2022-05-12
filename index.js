@@ -2,6 +2,8 @@ import router from "./routes/index.js"
 import Koa from "koa"
 import dotenv from "dotenv"
 import cors from "koa-cors"
+import koaBody from "koa-body"
+import convert from "koa-convert"
 
 dotenv.config()
 
@@ -12,7 +14,8 @@ const main = async () => {
     const app = new Koa();
 
     app
-      .use(cors())
+      .use(convert(cors()))
+      .use(convert(koaBody()))
       .use(router)
   
     app
