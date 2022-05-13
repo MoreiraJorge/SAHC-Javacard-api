@@ -1,10 +1,15 @@
-import router from './src/routes/index.js'
+import router from './routes/index.js'
 import Koa from 'koa'
 import dotenv from 'dotenv'
 import cors from 'koa-cors'
 import koaBody from 'koa-body'
 import convert from 'koa-convert'
 import { handleErrorAsync } from './helpers.js'
+
+/* import user from './models/user.js'
+const User = new user()
+
+console.log(User.get()) */
 
 dotenv.config()
 
