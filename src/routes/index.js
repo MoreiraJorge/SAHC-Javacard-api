@@ -1,8 +1,10 @@
-import Router from "koa-router"
+import Router from 'koa-router'
 
-import checkStatusRouter from "./checkStatus/checkStatus.js"
+import checkStatusRouter from './checkStatus.js'
+import applicationRouter from './application.js'
 
-const apiRouter = new Router({ prefix: '/api'});
-apiRouter.use('', checkStatusRouter);
+const apiRouter = new Router({ prefix: '/api' })
+apiRouter.use('', checkStatusRouter)
+apiRouter.use('/applications', applicationRouter)
 
-export default apiRouter.routes();
+export default apiRouter.routes()

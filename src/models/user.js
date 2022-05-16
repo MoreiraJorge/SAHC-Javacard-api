@@ -1,8 +1,8 @@
-import { get } from 'koa/lib/response'
+import db from '../db/index.js'
 
 class User {
-	get() {
-		return 'aaa'
+	async get(email) {
+		return await db('users').where({ email }).first()
 	}
 }
 

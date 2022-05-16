@@ -6,11 +6,6 @@ import koaBody from 'koa-body'
 import convert from 'koa-convert'
 import { handleErrorAsync } from './helpers.js'
 
-/* import user from './models/user.js'
-const User = new user()
-
-console.log(User.get()) */
-
 dotenv.config()
 
 const PORT = process.env.SERVER_PORT || 4001

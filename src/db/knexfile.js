@@ -1,13 +1,10 @@
-// Update with your config settings.
+import dotenv from 'dotenv'
+dotenv.config()
 
-/**
- * @type { Object.<string, import("knex").Knex.Config> }
- */
-
-const HOST = process.env.SERVER_PORT || 4001
-const USER = process.env.LOCAL_HOST || 'root'
-const PASSWORD = process.env.LOCAL_HOST || 'root'
-const DATABASE = process.env.LOCAL_HOST || 'sahc'
+const HOST = process.env.DB_HOST || 'localhost'
+const USER = process.env.DB_USER || 'root'
+const PASSWORD = process.env.DB_PASSWORD || 'root'
+const DATABASE = process.env.DB_DATABASE || 'sahc'
 
 const options = {
 	development: {
