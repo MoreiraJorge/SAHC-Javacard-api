@@ -1,4 +1,4 @@
-import router from './src/routes/index.js'
+import router from './routes/index.js'
 import Koa from 'koa'
 import dotenv from 'dotenv'
 import cors from 'koa-cors'
@@ -9,7 +9,7 @@ import session from 'koa-session'
 
 import { handleErrorAsync } from './helpers.js'
 
-import './src/middleware/passport-strategies.js'
+import './middleware/passport-strategies.js'
 
 dotenv.config()
 

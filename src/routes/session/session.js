@@ -1,7 +1,7 @@
 import Router from 'koa-router'
 import passport from 'koa-passport'
 import jwt from 'jsonwebtoken'
-import { applicationException } from '../../../helpers.js'
+import { applicationException } from '../../helpers.js'
 
 const router = new Router()
 
