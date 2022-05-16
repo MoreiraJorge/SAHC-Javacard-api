@@ -34,9 +34,12 @@ router.post('/login', passport.authenticate('local'), async (ctx) => {
 		if (!ctx.isAuthenticated()) {
 			throw new applicationException('Unhauthorized', 401)
 		}
+
 		const user = ctx.state.user
 		const token = jwt.sign({ email: user.email }, 'secret')
+
 		ctx.body = { token: token }
+		ctx.status = 200
 	} catch (e) {
 		throw new applicationException(e.message, e.statusCode)
 	}

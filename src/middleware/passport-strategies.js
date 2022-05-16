@@ -36,11 +36,18 @@ opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken()
 opts.secretOrKey = process.env.SECRET || 'secret'
 
 passport.use(
-	new JwtStrategy(opts, function (jwt_payload, done) {
-		//TODO: Use verify
-		console.log('payload received', jwt_payload)
-		done(null, {
-			user: 'test',
-		})
+	new JwtStrategy(opts, async function (jwt_payload, done) {
+		try {
+			const tokenPayload = jwt_payload
+			const user = await User.get(tokenPayload.email)
+
+			if (user.email !== tokenPayload.email) {
+				throw new applicationException('Unhauthorized', 401)
+			}
+
+			done(null, user)
+		} catch (e) {
+			done(e)
+		}
 	}),
 )

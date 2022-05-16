@@ -10,12 +10,9 @@ const router = new Router()
 })
  */
 
-router.get(
-	'/health',
-	passport.authenticate('jwt', { session: false }),
-	async (ctx) => {
-		ctx.body = 'Success!'
-	},
-)
+//usar passport.authenticate('jwt', { session: false }) para proteger com token
+router.get('/health', async (ctx) => {
+	ctx.body = 'Success!'
+})
 
 export default router.routes()
