@@ -1,5 +1,6 @@
 import Router from 'koa-router'
 import passport from 'koa-passport'
+import jwt from 'jsonwebtoken'
 import { applicationException } from '../../../helpers.js'
 
 const router = new Router()
@@ -11,7 +12,8 @@ router.post('/login', passport.authenticate('local'), async (ctx) => {
 		if (!ctx.isAuthenticated()) {
 			throw new applicationException('Unhauthorized', 401)
 		}
-		ctx.body = 'Success!'
+		const token = jwt.sign({ id: 1, name: 'Test token' }, 'secret')
+		ctx.body = token
 	} catch (e) {
 		throw new applicationException(e.message, e.statusCode)
 	}

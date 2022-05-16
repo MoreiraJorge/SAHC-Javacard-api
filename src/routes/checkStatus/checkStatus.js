@@ -1,4 +1,5 @@
 import Router from 'koa-router'
+import passport from 'koa-passport'
 
 const router = new Router()
 
@@ -9,8 +10,12 @@ const router = new Router()
 })
  */
 
-router.post('/health', async (ctx) => {
-	ctx.body = 'Success!'
-})
+router.get(
+	'/health',
+	passport.authenticate('jwt', { session: false }),
+	async (ctx) => {
+		ctx.body = 'Success!'
+	},
+)
 
 export default router.routes()

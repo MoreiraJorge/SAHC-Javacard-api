@@ -1,4 +1,7 @@
 import LocalStrategy from 'passport-local/lib/strategy.js'
+import JwtStrategy from 'passport-jwt/lib/strategy.js'
+import ExtractJwt from 'passport-jwt/lib/extract_jwt.js'
+
 import passport from 'koa-passport'
 
 passport.serializeUser((user, done) => done(null, user))
@@ -24,4 +27,18 @@ passport.use(
 			}
 		},
 	),
+)
+
+var opts = {}
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken()
+opts.secretOrKey = process.env.SECRET || 'secret'
+
+passport.use(
+	new JwtStrategy(opts, function (jwt_payload, done) {
+		//TODO: Use verify
+		console.log('payload received', jwt_payload)
+		done(null, {
+			user: 'test',
+		})
+	}),
 )
