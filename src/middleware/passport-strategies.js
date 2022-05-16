@@ -1,6 +1,7 @@
 import LocalStrategy from 'passport-local/lib/strategy.js'
 import JwtStrategy from 'passport-jwt/lib/strategy.js'
 import ExtractJwt from 'passport-jwt/lib/extract_jwt.js'
+import { User } from '../models/index.js'
 
 import passport from 'koa-passport'
 
@@ -12,18 +13,11 @@ passport.use(
 		{ usernameField: 'email' },
 		async (email, password, done) => {
 			try {
-				const user = {
-					email: email,
-					password: password,
-				}
-
-				console.log('Passport local success!')
-				//TODO: Find user
-
+				const user = await User.get(email)
 				//TODO: Compare hash
 				return done(null, user)
 			} catch (e) {
-				done(error)
+				done(e)
 			}
 		},
 	),

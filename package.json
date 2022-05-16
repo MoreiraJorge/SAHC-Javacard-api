@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/MoreiraJorge/SAHC-Javacard-api#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "dotenv": "^16.0.1",
     "jsonwebtoken": "^8.5.1",
     "knex": "^2.0.0",
