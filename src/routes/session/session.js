@@ -10,17 +10,17 @@ const router = new Router()
 
 router.post('/register', async (ctx) => {
 	try {
-		const newUser = ctx.request.body
+		const { email, password } = ctx.request.body
 
-		const user = await User.get(newUser.email)
+		const user = await User.get(email)
 		if (user) {
 			throw new applicationException('An error occured', 500)
 		}
 
 		const salt = bcrypt.genSaltSync(10)
-		const hash = bcrypt.hashSync(newUser.password, salt)
+		const hash = bcrypt.hashSync(password, salt)
 
-		await User.insert(newUser.email, hash)
+		await User.insert(email, hash)
 
 		ctx.body = 'Success!'
 		ctx.status = 200
