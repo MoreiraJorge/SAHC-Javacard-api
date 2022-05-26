@@ -1,5 +1,5 @@
 import Router from 'koa-router'
-import { applicationException } from '../helpers.js'
+import { applicationException, asciiToHex, numberToHex, getCipherSize, buffToHex } from '../helpers.js'
 import { Application } from '../models/index.js'
 import passport from 'koa-passport'
 import generator from 'generate-password'
@@ -8,7 +8,6 @@ import crypto from 'crypto'
 const router = new Router()
 
 router.get('/test', (ctx) => {
-	console.log(ctx.params)
 	ctx.body = 'test'
 	ctx.status = 200
 })
@@ -36,9 +35,18 @@ router.get(
 		try {
 			const user = ctx.state.user
 			const { applicationName } = ctx.params
-			const cryptogram = await Application.getCryptogram(applicationName, user)
+			const cryptogram = await Application.getCryptogramAndMetadata(applicationName, user)
+			
+			const hexIv = buffToHex(cryptogram?.iv);
+			const ivSize = numberToHex(hexIv.split(' ').length);
+			const result = buffToHex(cryptogram?.cryptogram)
+			const cryptogramSize = numberToHex(result.split(' ').length)
+			const hexSize = numberToHex(Number(cryptogram?.size));
+			ctx.body =  {
+				initIvAPDU: `0x80 0x12 0x00 0x00 ${ivSize} ${hexIv} 0X00;`,
+				decryptAPDU: `0x80 0x11 0x01 0x18 ${cryptogramSize} ${result} ${hexSize};`,
+			}
 
-			ctx.body = { cryptogram }
 			ctx.status = 200
 		} catch (e) {
 			throw new applicationException(e.message, 404)
@@ -75,17 +83,51 @@ router.post(
 				})
 			}
 
-			const iv = crypto.randomBytes(16)
+			const iv = crypto.randomBytes(8)
+			const formattedIv = buffToHex(iv.toString('hex'))
 
 			if (applicationName) {
-				//TODO: Check if card is connected otherwise throw error
-				//TODO: Request to card to encrypt password and save cryptogram
-				await Application.createCryptogram({
+				await Application.createPassword({
 					userId,
 					applicationName,
-					cryptogram: tempPassword,
 					size: tempPassword.length,
 					iv: iv.toString('hex'),
+				})
+				
+				ctx.body =  {
+					initIvAPDU: `0x80 0x12 0x00 0x00 ${numberToHex(iv.length)} ${formattedIv} 0X00;`,
+					encryptAPDU: `0x80 0x11 0x00 0x00 ${numberToHex(tempPassword.length)} ${asciiToHex(tempPassword)} ${numberToHex(getCipherSize(tempPassword.length))};`
+				}
+				ctx.status = 200
+			}
+		} catch (e) {
+			throw new applicationException(e.message, 404)
+		}
+	},
+)
+
+router.put(
+	'/:id/cryptogram',
+	passport.authenticate('jwt', { session: false }),
+	async (ctx) => {
+		try {
+			const { id } = ctx.params
+			const user = ctx.state.user
+			const { applicationName, cryptogram } = ctx.request.body
+
+			const application = await Application.getApplicationByUser(id, user)
+
+			if (!application) {
+				throw new applicationException(
+					'You cannot update this application!',
+					404,
+				)
+			}
+
+			if (applicationName) {
+				await Application.updateCryptogram({
+					applicationName,
+					cryptogram: cryptogram.replace(/,|\s/g, "").trim()
 				})
 
 				ctx.status = 200
