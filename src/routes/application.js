@@ -41,10 +41,10 @@ router.get(
 			const ivSize = numberToHex(hexIv.split(' ').length);
 			const result = buffToHex(cryptogram?.cryptogram)
 			const cryptogramSize = numberToHex(result.split(' ').length)
-			const hexSize = numberToHex(Number(cryptogram?.size));
+			const expectedPasswordSize = numberToHex(Number(cryptogram?.size));
 			ctx.body =  {
 				initIvAPDU: `0x80 0x12 0x00 0x00 ${ivSize} ${hexIv} 0X00;`,
-				decryptAPDU: `0x80 0x11 0x01 0x18 ${cryptogramSize} ${result} ${hexSize};`,
+				decryptAPDU: `0x80 0x11 0x01 ${expectedPasswordSize} ${cryptogramSize} ${result} ${expectedPasswordSize};`,
 			}
 
 			ctx.status = 200
