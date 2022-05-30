@@ -15,25 +15,35 @@ export function applicationException(message, statusCode) {
 }
 
 export function asciiToHex(str) {
-	return Array.from(str).map((ele) => {
-		return "0x" + Number(ele.charCodeAt()).toString(16);
-	}).join(' ')
+	return Array.from(str)
+		.map((ele) => {
+			return '0x' + Number(ele.charCodeAt()).toString(16)
+		})
+		.join(' ')
 }
 
-export function numberToHex(num){
-	if((num).toString(16).length === 1){
-		return "0x0" + (num).toString(16)
+export function numberToHex(num) {
+	if (num.toString(16).length === 1) {
+		return '0x0' + num.toString(16)
 	}
-	return "0x" + (num).toString(16);
+	return '0x' + num.toString(16)
 }
 
-export function buffToHex(str){
-	return str.replace(/(.{2})/g, "0x$1 ").trim()
+export function buffToHex(str) {
+	return str.replace(/(.{2})/g, '0x$1 ').trim()
 }
 
 export function getCipherSize(dataLen) {
-	if ((dataLen % 8) == 0) {
-		return dataLen + 8;
+	if (dataLen % 8 == 0) {
+		return dataLen + 8
 	}
 	return dataLen + (8 - (dataLen % 8))
+}
+
+export function hexToAscii(hexString) {
+	let str = ''
+	for (let n = 0; n < hexString.length; n += 2) {
+		str += String.fromCharCode(parseInt(hexString.substr(n, 2), 16))
+	}
+	return str
 }
