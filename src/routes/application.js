@@ -7,11 +7,6 @@ import crypto from 'crypto'
 
 const router = new Router()
 
-router.get('/test', (ctx) => {
-	ctx.body = 'test'
-	ctx.status = 200
-})
-
 router.get(
 	'/',
 	passport.authenticate('jwt', { session: false }),
@@ -29,13 +24,13 @@ router.get(
 )
 
 router.get(
-	'/:applicationName/cryptogram',
+	'/:id/cryptogram',
 	passport.authenticate('jwt', { session: false }),
 	async (ctx) => {
 		try {
 			const user = ctx.state.user
-			const { applicationName } = ctx.params
-			const cryptogram = await Application.getCryptogramAndMetadata(applicationName, user)
+			const { id } = ctx.params
+			const cryptogram = await Application.getCryptogramAndMetadata(id, user)
 			
 			const hexIv = buffToHex(cryptogram?.iv);
 			const ivSize = numberToHex(hexIv.split(' ').length);
@@ -60,7 +55,7 @@ router.post(
 	async (ctx) => {
 		try {
 			const { id: userId } = ctx.state.user
-			const { applicationName, password } = ctx.request.query
+			const { applicationName, password } = ctx.request.body
 			let tempPassword
 
 			if (password) {
@@ -113,7 +108,7 @@ router.put(
 		try {
 			const { id } = ctx.params
 			const user = ctx.state.user
-			const { applicationName, cryptogram } = ctx.request.body
+			const { cryptogram } = ctx.request.body
 
 			const application = await Application.getApplicationByUser(id, user)
 
@@ -124,14 +119,14 @@ router.put(
 				)
 			}
 
-			if (applicationName) {
-				await Application.updateCryptogram({
-					applicationName,
-					cryptogram: cryptogram.replace(/,|\s/g, "").trim()
-				})
+			
+			await Application.updateCryptogram({
+				id,
+				cryptogram: cryptogram.replace(/,|\s/g, "").trim()
+			})
 
-				ctx.status = 200
-			}
+			ctx.status = 200
+			
 		} catch (e) {
 			throw new applicationException(e.message, 404)
 		}

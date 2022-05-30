@@ -32,21 +32,21 @@ class Application {
 	}
 
 	async updateCryptogram(data) {
-		const { cryptogram, applicationName } = data
+		const { cryptogram, id } = data
 
 		return await db('applications').update({
 			cryptogram
 		}).where({
-			application_name: applicationName
+			id
 		})
 	}
 
-	async getCryptogramAndMetadata(application, user) {
+	async getCryptogramAndMetadata(id, user) {
 		const result = await db('applications')
 			.select('cryptogram')
 			.select('iv')
 			.select('size')
-			.where({ application_name: application, user_id: user.id })
+			.where({ id, user_id: user.id })
 			.first()
 
 		return result
